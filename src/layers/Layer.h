@@ -5,8 +5,7 @@
 #ifndef NEURAL_NET_CONSTRUCTOR1_LAYER_H
 #define NEURAL_NET_CONSTRUCTOR1_LAYER_H
 
-#endif //NEURAL_NET_CONSTRUCTOR1_LAYER_H
-
+#include <vector>
 #include "../utils/Parameter.h"
 #include "../optimizers/Optimizer.h"
 
@@ -17,12 +16,11 @@ class Layer {
     vector<Parameter<T>> parameters;
 
 public:
-    explicit Layer();
-    ~Layer();
+    virtual ~Layer() = default;
 
-    Eigen::MatrixXd forward(Tensor<T> const & X);
+    virtual Tensor<T> forward(Tensor<T> const & X) = 0;
 
-    Eigen::MatrixXd backward(Tensor<T> const & grad);
+    virtual Tensor<T> backward(Tensor<T> const & grad) = 0;
 
     void update(Optimizer & optimizer) {
         for (Parameter<T> & parameter : parameters) {
@@ -30,3 +28,7 @@ public:
         }
     }
 };
+
+#endif //NEURAL_NET_CONSTRUCTOR1_LAYER_H
+
+

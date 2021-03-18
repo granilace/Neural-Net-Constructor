@@ -10,10 +10,14 @@
 
 class Optimizer {
 public:
-    Optimizer();
+    Optimizer() {
+
+    }
 
     template<typename T>
-    void update(Parameter<T> & parameter);
+    void update(Parameter<T> & parameter) {
+
+    };
 };
 
 

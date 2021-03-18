@@ -2,6 +2,8 @@
 #include <Eigen/Dense>
 #include "src/utils/Tensor.h"
 #include "src/utils/Parameter.h"
+#include "src/layers/Identity.h"
+#include "src/layers/Sequential.h"
 
 using Eigen::MatrixXd;
 using Eigen::Matrix;
@@ -22,5 +24,13 @@ int main()
     Tensor<float> tensor(3, 4);
     Tensor<float> vec(4, 1);
     Parameter<float> parameter(tensor);
-    Tensor<float> result = (tensor * vec);
+    Tensor<float> input = (tensor * vec);
+
+    auto model = Sequential<float>({
+           new Identity<float>(),
+           new Identity<float>()
+    });
+    Tensor<float> loss = model.forward(input);
+    std::cout << "loss=" << loss.sum();
+    model.backward(loss);
 }

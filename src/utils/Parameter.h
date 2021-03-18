@@ -14,7 +14,6 @@ class Parameter {
 public:
     explicit Parameter(const Tensor<T> & tensor) : tensor(tensor), gradient(tensor) {
         // zero_like for gradient
-        std::cout << "got tensor!";
     }
 };
 
