@@ -1,0 +1,8 @@
+//
+// Created by Sergei Troshin on 18.03.2021.
+//
+
+#ifndef NEURAL_NET_CONSTRUCTOR1_LINEAR_H
+#define NEURAL_NET_CONSTRUCTOR1_LINEAR_H
+
+#endif //NEURAL_NET_CONSTRUCTOR1_LINEAR_H
