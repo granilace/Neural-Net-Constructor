@@ -8,11 +8,15 @@ target_sources(nn_constructor
     layers/Sequential.cpp
     utils/Parameter.cpp
     utils/Tensor.cpp
+    utils/Dataset.cpp
+    utils/DataLoader.cpp
   PUBLIC
     layers/Identity.h
     layers/Sequential.h
     utils/Parameter.h
     utils/Tensor.h
+    utils/Dataset.h
+    utils/DataLoader.h
 )
 
 target_link_libraries(nn_constructor Eigen3::Eigen)
