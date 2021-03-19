@@ -21,5 +21,5 @@ TEST(Sequential, Identity) {
     });
     Tensor<float> loss = model.forward(input);
     model.backward(loss);
-    ASSERT_NEAR(loss.sum(), 12.1, 1e-7);
+    ASSERT_NEAR(loss.sum(), 12.0, 1e-7);
 }
