@@ -36,6 +36,18 @@ public:
         }
         return t;
     }
+
+    void update(Optimizer &optimizer) override {
+        for (const auto &layer : layers) {
+            layer->update(optimizer);
+        }
+    }
+
+    void init_weights() {
+        for (const auto &layer : layers) {
+            layer->init_weights();
+        }
+    }
 };
 
 #endif //NEURAL_NET_CONSTRUCTOR1_SEQUENTIAL_H

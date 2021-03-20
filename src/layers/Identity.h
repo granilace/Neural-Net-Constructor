@@ -19,6 +19,8 @@ public:
     Tensor<T> backward(Tensor<T> const &grad) override {
         return grad;
     };
+
+    void update(Optimizer &optimizer) override {}
 };
 
 

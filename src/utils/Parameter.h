@@ -9,13 +9,18 @@
 
 template<typename T>
 class Parameter {
+public:
     Tensor<T> tensor;
     Tensor<T> gradient; // the same shape as tensor
-public:
+
     explicit Parameter(const Tensor<T> & tensor) : tensor(tensor), gradient(tensor) {
-        // zero_like for gradient
+        for (int i = 0; i < gradient.rows(); ++i) {
+            for (int j = 0; j < gradient.cols(); ++j) {
+                gradient(i,j) = 0.0;
+            }
+        }
+
     }
 };
 
 #endif //NEURAL_NET_CONSTRUCTOR1_PARAMETER_H
-

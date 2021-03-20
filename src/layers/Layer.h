@@ -13,8 +13,6 @@ using namespace std;
 
 template<typename T>
 class Layer {
-    vector<Parameter<T>> parameters;
-
 public:
     virtual ~Layer() = default;
 
@@ -22,13 +20,11 @@ public:
 
     virtual Tensor<T> backward(Tensor<T> const & grad) = 0;
 
-    void update(Optimizer & optimizer) {
-        for (Parameter<T> & parameter : parameters) {
-            optimizer.update(parameter);
-        }
-    }
+    virtual void update(Optimizer & optimizer) = 0;
+
+    void init_weights() {};
+
+    void get_weights() {};
 };
 
 #endif //NEURAL_NET_CONSTRUCTOR1_LAYER_H
-
-

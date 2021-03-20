@@ -1,7 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 #include "Layer.h"
+
 
 template<typename T>
 class Linear : public Layer<T> {
@@ -10,15 +12,28 @@ public:
     }
 
     Tensor<T> forward(Tensor<T> const &X) override {
-        return (X * weights_).rowwise() + bias_.rowwise().sum().transpose();
+        input_ = X;
+        return (X * weights_.tensor).rowwise() + bias_.tensor.rowwise().sum().transpose();
     };
 
     Tensor<T> backward(Tensor<T> const &grad) override {
-        return grad * weights_.transpose();
+        weights_.gradient = input_.transpose() * grad;
+        bias_.gradient = grad.colwise().sum().transpose();
+        return grad * weights_.tensor.transpose();
     };
 
-private:
-    Tensor<T> weights_;
-    Tensor<T> bias_;
-};
+    void update(Optimizer &optimizer) override {
+        optimizer.update(weights_);
+        optimizer.update(bias_);
+    };
 
+    void init_weights() {
+        weights_.tensor.setOnes();
+        bias_.tensor.setOnes();
+    }
+
+private:
+    Parameter<T> weights_;
+    Parameter<T> bias_;
+    Tensor<T> input_;
+};

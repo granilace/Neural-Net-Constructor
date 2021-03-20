@@ -5,18 +5,20 @@
 #ifndef NEURAL_NET_CONSTRUCTOR1_OPTIMIZER_H
 #define NEURAL_NET_CONSTRUCTOR1_OPTIMIZER_H
 
+#include <vector>
 #include "../utils/Parameter.cpp"
 
 
 class Optimizer {
+private:
+    float learning_rate;
 public:
-    Optimizer() {
+    // On init just pass vector with all parameters
+    Optimizer(float learning_rate_) : learning_rate(learning_rate_) {}
 
-    }
-
-    template<typename T>
-    void update(Parameter<T> & parameter) {
-
+    template <typename T>
+    void update(Parameter<T>& p) {
+        p.tensor -= learning_rate * p.gradient;
     };
 };
 
