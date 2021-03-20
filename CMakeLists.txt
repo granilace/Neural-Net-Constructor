@@ -10,3 +10,4 @@ enable_testing()
 
 add_subdirectory(test)
 
+target_compile_definitions(unit_tests PUBLIC TEST_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/test/")

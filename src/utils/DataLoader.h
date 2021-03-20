@@ -6,10 +6,10 @@
 class CsvDatasetLoader {
  public:
     CsvDatasetLoader(CsvDataset *dataset, int batchSize);
-    [[nodiscard]] int size() const { return sz; }
-    [[nodiscard]] int currentBatchIndex() const { return curBatchIdx; }
+    int size() const { return sz; }
+    int currentBatchIndex() const { return curBatchIdx; }
 
-    [[nodiscard]] std::pair<Tensor<float>, Tensor<int>> getNextBatch();
+    std::pair<Tensor<float>, Tensor<int>> nextBatch();
 
     ~CsvDatasetLoader() { dataset = nullptr; }
 

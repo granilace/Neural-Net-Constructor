@@ -5,16 +5,12 @@ CsvDatasetLoader::CsvDatasetLoader(CsvDataset *dataset, int batchSize) : dataset
     curBatchIdx = 0;
 }
 
-std::pair<Tensor<float>, Tensor<int>> CsvDatasetLoader::getNextBatch() {
+std::pair<Tensor<float>, Tensor<int>> CsvDatasetLoader::nextBatch() {
     Tensor<float> x;
     Tensor<int> y;
     x.resize(batchSize, dataset->nFeatures());
     if (dataset->trainMode()) {
         y.resize(batchSize, 1);
-    }
-
-    if (curBatchIdx >= sz) {
-        curBatchIdx = 0;
     }
 
     int startIdx = curBatchIdx * batchSize;
@@ -29,5 +25,8 @@ std::pair<Tensor<float>, Tensor<int>> CsvDatasetLoader::getNextBatch() {
         }
     }
     ++curBatchIdx;
+    if (curBatchIdx >= sz) {
+        curBatchIdx = 0;
+    }
     return std::pair<Tensor<float>, Tensor<int>>(x, y);
 }
