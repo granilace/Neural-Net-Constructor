@@ -4,7 +4,10 @@
 
 template<typename T>
 T MSE(const Tensor<T>& first, const Tensor<T>& second) {
-    Tensor<float> diff = first - second;
-    Tensor<float> diff_squared = diff.unaryExpr([](T value) {return value * value;});
-    return diff_squared.mean();
+    return (first - second).array().pow(2).mean();
+}
+
+template<typename T>
+T LogLoss(const Tensor<T>& probs, const Tensor<T>& labels) {
+    return -(labels.array() * probs.array().log() + (1 - labels.array()) * (1 - probs.array()).log()).mean();
 }
