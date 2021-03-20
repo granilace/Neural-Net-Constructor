@@ -28,7 +28,7 @@ void CsvDataset::addElement(const std::string& csvLine, char sep, int nElements)
             sepPos = csvLine.find(sep, startPos);
         } else {
             assert(sepPos == std::string::npos);
-            if (train) {
+            if (withLabel) {
                 labels(labels.rows() - 1) = std::stoi(csvLine.substr(startPos));
             } else {
                 data(data.rows() - 1, i) = std::stof(csvLine.substr(startPos));
@@ -37,11 +37,11 @@ void CsvDataset::addElement(const std::string& csvLine, char sep, int nElements)
     }
 }
 
-CsvDataset::CsvDataset(const std::string& csvPath, bool train, int skipRows, char sep) : train(train) {
+CsvDataset::CsvDataset(const std::string& csvPath, bool withLabel, int skipRows, char sep) : withLabel(withLabel) {
     std::ifstream csv;
     csv.open(csvPath);
 
-    if (train) {
+    if (withLabel) {
         labels.resize(Eigen::NoChange, 1);
     }
 
@@ -56,8 +56,8 @@ CsvDataset::CsvDataset(const std::string& csvPath, bool train, int skipRows, cha
         }
         if (!columnsAmountDefined) {
             nElements = calculateElementsAmount(line, sep);
-            assert(!train || nElements > 1);
-            if (train) {
+            assert(!withLabel || nElements > 1);
+            if (withLabel) {
                 data.resize(Eigen::NoChange, nElements - 1);
             } else {
                 data.resize(Eigen::NoChange, nElements);
@@ -74,7 +74,7 @@ CsvDataset::CsvDataset(const std::string& csvPath, bool train, int skipRows, cha
 }
 
 std::pair<Tensor<float>, Tensor<int>> CsvDataset::getItem(int index) const {
-    if (train) {
+    if (withLabel) {
         return std::pair<Tensor<float>, Tensor<int>>(
                 data.block(index, 0, 1, data.cols()),
                 labels.block(index, 0, 1, labels.cols())
