@@ -1,7 +1,9 @@
 find_package (GTest REQUIRED)
 
 add_executable(unit_tests
-        tests.cpp
+    layers.cpp
+    optimizers.cpp
+    utils.cpp
 )
 
 target_link_libraries(unit_tests
