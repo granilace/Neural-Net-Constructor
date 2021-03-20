@@ -13,8 +13,18 @@
 
 static std::mt19937 gen(SEED);
 
+using Eigen::Dynamic;
+
 template<typename T>
-using Tensor = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>;
+class Tensor : public Eigen::Matrix<T, Dynamic, Dynamic> {
+ public:
+    Tensor() { }
+    Tensor(size_t h, size_t w) : Eigen::Matrix<T, Dynamic, Dynamic>(h, w) { }
+    template<typename Derived>
+    Tensor(const Eigen::MatrixBase<Derived> & m) : Eigen::Matrix<T, Dynamic, Dynamic>(m) { }
+    template<typename Derived>
+    Tensor(Eigen::MatrixBase<Derived> && m) : Eigen::Matrix<T, Dynamic, Dynamic>(std::move(m)) { }
+};
 
 // Or
 //template<typename T>
