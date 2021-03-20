@@ -11,7 +11,7 @@
 #include <random>
 #include <Eigen/Dense>
 
-std::mt19937 gen(SEED);
+static std::mt19937 gen(SEED);
 
 template<typename T>
 using Tensor = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>;
