@@ -14,12 +14,7 @@ public:
     Tensor<T> gradient; // the same shape as tensor
 
     explicit Parameter(const Tensor<T> & tensor) : tensor(tensor), gradient(tensor) {
-        for (int i = 0; i < gradient.rows(); ++i) {
-            for (int j = 0; j < gradient.cols(); ++j) {
-                gradient(i,j) = 0.0;
-            }
-        }
-
+        gradient.setZero();
     }
 };
 
