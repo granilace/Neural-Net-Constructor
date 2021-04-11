@@ -2,6 +2,7 @@
 
 #include "utils/DataLoader.h"
 #include "utils/Dataset.h"
+#include "utils/Parameter.h"
 #include "utils/Tensor.h"
 #include <string>
 
@@ -127,4 +128,53 @@ TEST(CsvDatasetLoader, BatchWithoutLabels) {
         ASSERT_TRUE(trueData.block(idx, 0, 3, trueData.cols()).isApprox(batch.first));
         ASSERT_TRUE(batch.second.size() == 0);
     }
+}
+
+TEST(Tensor, Serialization) {
+    Tensor<float> tensor(10, 4);
+    tensor.setOnes();
+    tensor(0, 0) = 5.24;
+    tensor(1, 2) = -1.3;
+    tensor(5, 1) = 0.0;
+
+    {
+        std::ofstream out_file(std::string(TEST_SOURCE_DIR) + "dump", std::ios::binary);
+        tensor.dump(out_file);
+    }
+    Tensor<float> loaded_tensor;
+    std::ifstream in_file(std::string(TEST_SOURCE_DIR) + "dump", std::ios::binary);
+    loaded_tensor.load(in_file);
+
+    ASSERT_NEAR(loaded_tensor(0, 0), 5.24, 1e-5);
+    ASSERT_NEAR(loaded_tensor(1, 2), -1.3, 1e-5);
+    ASSERT_NEAR(loaded_tensor(5, 1), 0.0, 1e-5);
+    ASSERT_NEAR(loaded_tensor(8, 3), 1.0, 1e-5);
+}
+
+TEST(Parameter, Serialization) {
+    Tensor<float> tensor(10, 4);
+    tensor.setOnes();
+    tensor(0, 0) = 5.24;
+    tensor(1, 2) = -1.3;
+    tensor(5, 1) = 0.0;
+    Parameter<float> parameter(tensor);
+    parameter.gradient(3, 3) = -2.1;
+    parameter.gradient(2, 0) = 4.12;
+
+    {
+        std::ofstream out_file(std::string(TEST_SOURCE_DIR) + "dump", std::ios::binary);
+        parameter.dump(out_file);
+    }
+    Parameter<float> loaded_parameter;
+    std::ifstream in_file(std::string(TEST_SOURCE_DIR) + "dump", std::ios::binary);
+    loaded_parameter.load(in_file);
+
+    ASSERT_NEAR(loaded_parameter.tensor(0, 0), 5.24, 1e-5);
+    ASSERT_NEAR(loaded_parameter.tensor(1, 2), -1.3, 1e-5);
+    ASSERT_NEAR(loaded_parameter.tensor(5, 1), 0.0, 1e-5);
+    ASSERT_NEAR(loaded_parameter.tensor(8, 3), 1.0, 1e-5);
+
+    ASSERT_NEAR(loaded_parameter.gradient(0, 0), 0.0, 1e-5);
+    ASSERT_NEAR(loaded_parameter.gradient(3, 3), -2.1, 1e-5);
+    ASSERT_NEAR(loaded_parameter.gradient(2, 0), 4.12, 1e-5);
 }

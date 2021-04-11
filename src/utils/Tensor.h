@@ -7,6 +7,7 @@
 
 #define SEED 1
 
+#include <fstream>
 #include <iostream>
 #include <random>
 #include <Eigen/Dense>
@@ -24,6 +25,25 @@ class Tensor : public Eigen::Matrix<T, Dynamic, Dynamic> {
     Tensor(const Eigen::MatrixBase<Derived> & m) : Eigen::Matrix<T, Dynamic, Dynamic>(m) { }
     template<typename Derived>
     Tensor(Eigen::MatrixBase<Derived> && m) : Eigen::Matrix<T, Dynamic, Dynamic>(std::move(m)) { }
+
+    void dump(std::ofstream & file) {
+        typename Tensor::Index rows = this->rows(), cols = this->cols();
+        file.write((char*) (&rows), sizeof(rows));
+        file.write((char*) (&cols), sizeof(cols));
+
+        auto data = this->data();
+        file.write((char*) data, rows * cols * sizeof(typename Tensor::Scalar));
+    }
+
+    void load(std::ifstream & file) {
+        typename Tensor::Index rows = 0, cols = 0;
+        file.read((char*) (&rows), sizeof(rows));
+        file.read((char*) (&cols), sizeof(cols));
+        this->resize(rows, cols);
+
+        auto data = this->data();
+        file.read((char *) data, rows * cols * sizeof(typename Tensor::Scalar));
+    }
 };
 
 // Or

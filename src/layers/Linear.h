@@ -8,6 +8,8 @@
 template<typename T>
 class Linear : public Layer<T> {
 public:
+    Linear() {}
+
     Linear(size_t input_size, size_t output_size): weights_(NormTensor<T>(input_size, output_size)), bias_(NormTensor<T>(output_size, 1)) {
     }
 
@@ -22,6 +24,16 @@ public:
         return grad * weights_.tensor.transpose();
     };
 
+    void dump(std::ofstream & file) override {
+        weights_.dump(file);
+        bias_.dump(file);
+    }
+
+    void load(std::ifstream & file) override {
+        weights_.load(file);
+        bias_.load(file);
+    }
+
     void update(Optimizer &optimizer) override {
         optimizer.update(weights_);
         optimizer.update(bias_);
@@ -32,7 +44,6 @@ public:
         bias_.tensor.setOnes();
     }
 
-private:
     Parameter<T> weights_;
     Parameter<T> bias_;
     Tensor<T> input_;
