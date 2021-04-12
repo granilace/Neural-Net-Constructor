@@ -17,6 +17,7 @@ target_sources(nn_constructor
     layers/Linear.h
     layers/Sequential.h
     layers/Conv2d.h
+    layers/Activations.h
     optimizers/Loss.h
     utils/Parameter.h
     utils/Tensor.h
