@@ -5,9 +5,9 @@ CsvDatasetLoader::CsvDatasetLoader(CsvDataset *dataset, int batchSize) : dataset
     nextBatchIdx = 0;
 }
 
-std::pair<Tensor<float>, Tensor<int>> CsvDatasetLoader::nextBatch() {
-    Tensor<float> x;
-    Tensor<int> y;
+std::pair<Tensor<float, 2>, Tensor<int, 2>> CsvDatasetLoader::nextBatch() {
+    Tensor<float, 2> x;
+    Tensor<int, 2> y;
     x.resize(batchSize, dataset->nFeatures());
     if (dataset->hasLabel()) {
         y.resize(batchSize, 1);
@@ -19,14 +19,14 @@ std::pair<Tensor<float>, Tensor<int>> CsvDatasetLoader::nextBatch() {
 
     for (int i = startIdx; i != endIdx; ++i) {
         auto curItem = dataset->getItem(i);
-        x.block(i - startIdx, 0, 1, x.cols()) = curItem.first;
+        x.chip(i - startIdx, 0) = curItem.first.eval();
         if (dataset->hasLabel()) {
-            y.block(i - startIdx, 0, 1, 1) = curItem.second;
+            y.chip(i - startIdx, 0) = curItem.second.eval();
         }
     }
     ++nextBatchIdx;
     if (nextBatchIdx >= sz) {
         nextBatchIdx = 0;
     }
-    return std::pair<Tensor<float>, Tensor<int>>(x, y);
+    return std::pair<Tensor<float, 2>, Tensor<int, 2>>(x, y);
 }

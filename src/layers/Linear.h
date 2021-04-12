@@ -1,50 +1,56 @@
 #pragma once
 
-#include <vector>
-#include <iostream>
 #include "Layer.h"
+#include <iostream>
+#include <vector>
 
+template <typename T> class Linear : public Layer<T, T, 2, 2> {
+  public:
+    static constexpr auto layer_type = LayerType::LinearLayer;
 
-template<typename T>
-class Linear : public Layer<T> {
-public:
     Linear() {}
 
-    Linear(size_t input_size, size_t output_size): weights_(NormTensor<T>(input_size, output_size)), bias_(NormTensor<T>(output_size, 1)) {
-    }
+    Linear(size_t input_size, size_t output_size)
+        : weights_(Tensor_to_Matrix(NormTensor<T>(input_size, output_size))),
+          bias_(Tensor_to_Matrix(NormTensor<T>(output_size, 1))) {}
 
-    Tensor<T> forward(Tensor<T> const &X) override {
-        input_ = X;
-        return (X * weights_.tensor).rowwise() + bias_.tensor.rowwise().sum().transpose();
+    Tensor<T, 2> forward(Tensor<T, 2> const& X) {
+        input_ = Tensor_to_Matrix(X);
+        MatrixType<T> res = (input_ * weights_.tensor).rowwise() +
+                            bias_.tensor.rowwise().sum().transpose();
+        return Matrix_to_Tensor(res);
     };
 
-    Tensor<T> backward(Tensor<T> const &grad) override {
-        weights_.gradient = input_.transpose() * grad;
-        bias_.gradient = grad.colwise().sum().transpose();
-        return grad * weights_.tensor.transpose();
+    Tensor<T, 2> backward(Tensor<T, 2> const& grad) override {
+        MatrixType<T> m_grad = Tensor_to_Matrix(grad);
+        weights_.gradient = input_.transpose() * m_grad;
+        bias_.gradient = m_grad.colwise().sum().transpose();
+        MatrixType<T> new_grad = m_grad * weights_.tensor.transpose();
+        return Matrix_to_Tensor(new_grad);
     };
 
-    void dump(std::ofstream & file) override {
+    void save_weights(std::ofstream& file) override {
         weights_.dump(file);
         bias_.dump(file);
     }
 
-    void load(std::ifstream & file) override {
+    void load_weights(std::ifstream& file) override {
         weights_.load(file);
         bias_.load(file);
     }
 
-    void update(Optimizer &optimizer) override {
+    void update(Optimizer& optimizer) override {
         optimizer.update(weights_);
         optimizer.update(bias_);
     };
 
     void init_weights() {
-        weights_.tensor.setOnes();
-        bias_.tensor.setOnes();
+        weights_.tensor.setConstant(1);
+        bias_.tensor.setConstant(1);
     }
 
-    Parameter<T> weights_;
-    Parameter<T> bias_;
-    Tensor<T> input_;
+  private:
+    ParameterMatrix<T> weights_;
+    ParameterMatrix<T> bias_;
+    MatrixType<T> input_;
 };

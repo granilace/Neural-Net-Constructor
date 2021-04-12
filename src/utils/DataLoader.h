@@ -13,7 +13,7 @@ class CsvDatasetLoader {
     int nextBatchIndex() const { return nextBatchIdx; }
 
     // returns pair of objects and its labels. If dataset.hasLabel() == false then labels.size() == 0
-    std::pair<Tensor<float>, Tensor<int>> nextBatch();
+    std::pair<Tensor<float, 2>, Tensor<int, 2>> nextBatch();
 
     ~CsvDatasetLoader() { dataset = nullptr; }
 

@@ -23,15 +23,15 @@ void CsvDataset::addElement(const std::string& csvLine, char sep, int nElements)
     for (int i = 0; i != nElements; ++i) {
         if (i != nElements - 1) {
             assert(sepPos > startPos);
-            data(data.rows() - 1, i) = std::stof(csvLine.substr(startPos, sepPos - startPos));
+            data(data.dimension(0) - 1, i) = std::stof(csvLine.substr(startPos, sepPos - startPos));
             startPos = sepPos + 1;
             sepPos = csvLine.find(sep, startPos);
         } else {
             assert(sepPos == std::string::npos);
             if (withLabel) {
-                labels(labels.rows() - 1) = std::stoi(csvLine.substr(startPos));
+                labels(labels.dimension(0) - 1) = std::stoi(csvLine.substr(startPos));
             } else {
-                data(data.rows() - 1, i) = std::stof(csvLine.substr(startPos));
+                data(data.dimension(0) - 1, i) = std::stof(csvLine.substr(startPos));
             }
         }
     }
@@ -65,25 +65,27 @@ CsvDataset::CsvDataset(const std::string& csvPath, bool withLabel, int skipRows,
             columnsAmountDefined = true;
         }
 
-        data.conservativeResize(data.rows() + 1, Eigen::NoChange);
-        labels.conservativeResize(labels.rows() + 1, Eigen::NoChange);
+        data.resize(data.dimension(0) + 1, Eigen::NoChange);
+        labels.resize(labels.dimension(0) + 1, Eigen::NoChange);
+
         addElement(line, sep, nElements);
     }
     csv.close();
-    assert(data.rows() == labels.rows());
+
+    assert(data.dimension(0) == labels.dimension(0));
 }
 
-std::pair<Tensor<float>, Tensor<int>> CsvDataset::getItem(int index) const {
+std::pair<Tensor<float, 1>, Tensor<int, 1>> CsvDataset::getItem(int index) const {
     if (withLabel) {
-        return std::pair<Tensor<float>, Tensor<int>>(
-                data.block(index, 0, 1, data.cols()),
-                labels.block(index, 0, 1, labels.cols())
-        );
+        return {
+            data.chip(index, 0).eval(),
+            labels.chip(index, 0).eval()
+        };
     } else {
-        return std::pair<Tensor<float>, Tensor<int>>(
-                data.block(index, 0, 1, data.cols()),
-                labels
-        );
+        return {
+            data.chip(index, 0).eval(),
+            labels.chip(0, 0).eval()
+        };
     }
 }
 
