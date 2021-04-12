@@ -41,6 +41,6 @@ class Layer {
     };
 };
 
-enum LayerType { IdentityLayer = 1, LinearLayer = 2, SequentialLayer = 3, Conv2dLayer = 4 };
+enum LayerType { IdentityLayer = 1, LinearLayer = 2, SequentialLayer = 3, Conv2dLayer = 4, MaxPoolLayer = 5 };
 
 #endif // NEURAL_NET_CONSTRUCTOR1_LAYER_H

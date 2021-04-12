@@ -6,6 +6,7 @@
 #include "layers/Linear.h"
 #include "layers/Conv2d.h"
 #include "layers/Sequential.h"
+#include "layers/MaxPool2d.h"
 
 static const float kEps = 1e-7;
 
@@ -123,4 +124,26 @@ TEST(Sequential, Serialization) {
     auto diff_squared_sum = get_value(diff.sum());
 
     ASSERT_NEAR(diff_squared_sum, 0.0, kEps);
+}
+
+TEST(Conv2dMaxPooltest, Conv2dMaxpool2d) {
+    // size_t in_channels, size_t out_channels, size_t kernel_height, size_t kernel_width
+
+    size_t in_channels = 1;
+    size_t out_channels = 3;
+    size_t kernel_height = 3;
+    size_t kernel_width = 3;
+
+    auto conv = Conv2d<float>(in_channels, out_channels, kernel_height, kernel_width); 
+    Tensor<float, 4> input(1, in_channels, 3, 3); // batch size x h x w x in_channels
+    Tensor<float, 4> kernel(in_channels, out_channels, kernel_height, kernel_width);  
+    Tensor<float, 1> bias(out_channels);  
+
+    Tensor<float, 4> output = conv2d<float>(input, kernel, bias);
+    std::cout << "output" << output;
+
+    output = conv.forward(input);
+
+    MaxPool2d<float> mp = MaxPool2d<float>(2, 2);
+    output = mp.forward(input);
 }
