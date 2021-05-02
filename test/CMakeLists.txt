@@ -1,9 +1,12 @@
 find_package (GTest REQUIRED)
 
+
 add_executable(unit_tests
-    layers.cpp
-    optimizers.cpp
-    utils.cpp
+  layers.cpp
+  optimizers.cpp
+  utils.cpp
+  conv_maxpool.cpp
+  dropout.cpp
 )
 
 target_link_libraries(unit_tests

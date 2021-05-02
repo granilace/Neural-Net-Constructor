@@ -104,6 +104,17 @@ class Sequential
         for_each(layers, [](auto& layer) { layer.init_weights(); });
     }
 
+    void train() {
+      Sequential::is_training = true;
+      for_each(layers,
+                 [](auto& layer) { layer.train(); });
+    }
+    void eval() {
+      Sequential::is_training = false;
+      for_each(layers,
+                 [](auto& layer) { layer.eval(); });
+    }
+
   private:
     std::tuple<Layers...> layers;
 };

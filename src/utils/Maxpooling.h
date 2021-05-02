@@ -48,7 +48,7 @@ Tensor<T, 4> grad_maxpool(Tensor<T, 4> const& input, Tensor<T, 4> const& grad_ou
     // out: bs x out_channels x h_new x w_new
     assert(input.dimension(0) == grad_out.dimension(0));
     assert(input.dimension(1) == grad_out.dimension(1));
-    assert(input.dimension(2) == grad_out.dimension(2));
+    assert((input.dimension(2) - 1) / 2 + 1 == grad_out.dimension(2));
     assert((input.dimension(3) - 1) / 2 + 1 == grad_out.dimension(3));
     
     size_t bs =          input.dimension(0);

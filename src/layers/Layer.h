@@ -31,6 +31,13 @@ class Layer {
 
     virtual void init_weights() = 0;
 
+    void train() {
+      is_training = true;
+    }
+    void eval() {
+      is_training = false;
+    }
+
     // void get_weights();
 
     using in_element_type = InType;
@@ -39,9 +46,11 @@ class Layer {
         in_num_dims = InNumDims,
         out_num_dims = OutNumDims,
     };
+    protected:
+      bool is_training = true;
 };
 
 enum LayerType { IdentityLayer = 1, LinearLayer = 2, SequentialLayer = 3,
-        Conv2dLayer = 4, MaxPoolLayer = 5, ActivationLayer = 6 };
+        Conv2dLayer = 4, MaxPoolLayer = 5, ActivationLayer = 6, DropoutLayer = 7 };
 
 #endif // NEURAL_NET_CONSTRUCTOR1_LAYER_H

@@ -34,6 +34,14 @@ Tensor<T, NumDims> matmul(const Tensor<T, NumDims>& lhs,
                                  {Eigen::IndexPair<int>(1, 0)}));
 }
 
+// template <typename T, int NumDims>
+// Tensor<T, NumDims> arange(const Tensor<T, NumDims>& t) {
+//     size_t Ndim = t.NumDimensions;
+//     size_t NumElem = t.size();
+//     const auto& d = t.dimensions();
+//     for (int i = 0; i < )
+// }
+
 template <typename T, int NumDims>
 void save_weights(Tensor<T, NumDims>& t, std::ofstream& file) {
     int rank = t.rank();
@@ -147,6 +155,15 @@ UniformTensor(Dims... dims) {
     std::uniform_real_distribution<T> distribution(from, to);
     return Tensor<T, sizeof...(Dims)>(dims...).unaryExpr([&distribution](T) {
         return distribution(gen);
+    });
+}
+
+template <typename T, size_t Dims>
+Tensor<T, Dims> 
+tensor_fill_bernoulli(Tensor<T, Dims> t, float p) {
+    std::bernoulli_distribution distribution(p);
+    return t.unaryExpr([&distribution](T) {
+        return static_cast<T>(distribution(gen));
     });
 }
 

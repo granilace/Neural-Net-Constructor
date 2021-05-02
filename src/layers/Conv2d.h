@@ -15,6 +15,8 @@ template <typename T> class Conv2d : public Layer<T, T, 4, 4> {
         : weights_(NormTensor<T>(in_channels, out_channels, kernel_height, kernel_width)),
           bias_(NormTensor<T>(out_channels)) {}
 
+    Conv2d(Tensor<T, 4> const & weights, Tensor<T, 1> const & bias) : weights_(weights), bias_(bias) {};
+
     Tensor<T, 4> forward(Tensor<T, 4> const& X) {
         X_ = X;
         Tensor<T, 4> output = conv2d<T>(X, weights_.tensor, bias_.tensor);
@@ -27,7 +29,8 @@ template <typename T> class Conv2d : public Layer<T, T, 4, 4> {
         weights_.gradient += dfdF;
         Tensor<T, 1> dfdb = grad_bias<T>(grad);
         bias_.gradient += dfdb;
-        return grad; //XXX implement
+        Tensor<T, 4> dX = grad_input<T>(weights_.tensor, grad);
+        return dX;
     };
 
     void save_weights(std::ofstream& file) override {
@@ -48,6 +51,13 @@ template <typename T> class Conv2d : public Layer<T, T, 4, 4> {
     void init_weights() {
         weights_.tensor.setConstant(1);
         bias_.tensor.setConstant(1);
+    }
+
+    Parameter<T, 4> get_weights() {
+        return weights_;
+    }
+    Parameter<T, 1> get_bias() {
+        return bias_;
     }
 
   private:
