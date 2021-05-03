@@ -1,5 +1,6 @@
 add_library(nn_constructor optimizers/Loss.h)
 
+find_package (PNG REQUIRED)
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 target_sources(nn_constructor
@@ -25,7 +26,7 @@ target_sources(nn_constructor
     utils/DataLoader.h
 )
 
-target_link_libraries(nn_constructor Eigen3::Eigen)
+target_link_libraries(nn_constructor Eigen3::Eigen ${PNG_LIBRARY})
 
 target_include_directories(nn_constructor
   PUBLIC

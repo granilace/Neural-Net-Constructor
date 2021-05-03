@@ -1,7 +1,11 @@
 #pragma once
+#include <optional>
+#include <png.h>
 #include <string>
 #include "Tensor.h"
 #include <utility>
+
+int calculateElementsAmount(const std::string& csvLine, char sep);
 
 class CsvDataset {
  public:
@@ -22,6 +26,25 @@ class CsvDataset {
     Tensor<int, 2> labels;
     bool withLabel;
 
-    int calculateElementsAmount(const std::string& csvLine, char sep) const;
     void addElement(const std::string& csvLine, char sep, int nElements);
+};
+
+class ImageDataset {
+public:
+    explicit ImageDataset(const std::string& imagesDirectoryPath, const std::optional<std::string>& labelsCsvPath = std::nullopt, char sep = ',');
+
+    int size() const { return data.dimension(0); }
+
+    int height() const { return data.dimension(1); }
+    int width() const { return data.dimension(2); }
+    int nChannels() const { return data.dimension(3); }
+
+    // returns pair of object and its label. If hasLabel() == false then label.size() == 0
+    std::pair<Tensor<float, 3>, Tensor<int, 1>> getItem(int index) const;
+
+    // ~ImageDataset();
+
+private:
+    Tensor<float, 4> data;
+    Tensor<int, 2> labels;
 };

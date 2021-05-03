@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(Neural_Net_Constructor)
 set(CMAKE_CXX_STANDARD 17)
 
+find_package (PNG REQUIRED)
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 add_subdirectory(src)

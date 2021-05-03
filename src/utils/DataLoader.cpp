@@ -30,3 +30,31 @@ std::pair<Tensor<float, 2>, Tensor<int, 2>> CsvDatasetLoader::nextBatch() {
     }
     return std::pair<Tensor<float, 2>, Tensor<int, 2>>(x, y);
 }
+
+ImageDatasetLoader::ImageDatasetLoader(ImageDataset *dataset, int batchSize) : dataset(dataset), batchSize(batchSize) {
+    sz = dataset->size() / batchSize;
+    nextBatchIdx = 0;
+}
+
+std::pair<Tensor<float, 4>, Tensor<int, 2>> ImageDatasetLoader::nextBatch() {
+    Tensor<float, 4> x;
+    Tensor<int, 2> y;
+    x.resize(batchSize, dataset->height(), dataset->width(), dataset->nChannels());
+    y.resize(batchSize, 1);
+
+    int startIdx = nextBatchIdx * batchSize;
+    int endIdx = (nextBatchIdx + 1) * batchSize;
+    std::cout << "startIdx=" << startIdx << ", endIdx=" << endIdx << std::endl;
+    assert(endIdx <= dataset->size());
+
+    for (int i = startIdx; i != endIdx; ++i) {
+        auto curItem = dataset->getItem(i);
+        x.chip(i - startIdx, 0) = curItem.first.eval();
+        y.chip(i - startIdx, 0) = curItem.second.eval();
+    }
+    ++nextBatchIdx;
+    if (nextBatchIdx >= sz) {
+        nextBatchIdx = 0;
+    }
+    return {x, y};
+}
