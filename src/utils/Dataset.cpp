@@ -84,16 +84,15 @@ Tensor<float, 3> read_png_file(const char *filename) {
     fclose(fp);
 
     Tensor<float, 3> rgb_image;
-    rgb_image.resize(height, width, 3);
+    rgb_image.resize(3, height, width);
     for(int y = 0; y < height; y++) {
         png_bytep row = row_pointers[y];
         for(int x = 0; x < width; x++) {
             png_bytep px = &(row[x * 4]);
             float r = (float)px[0], g = (float)px[1], b = (float)px[2];
-            // std::cout << '[' << y << ',' << x << "] " << "Setting (" << r << "," << g << "," << b << ")" << std::endl;
-            rgb_image(x, y, 0) = r;
-            rgb_image(x, y, 1) = g;
-            rgb_image(x, y, 2) = b;
+            rgb_image(0, x, y) = r;
+            rgb_image(1, x, y) = g;
+            rgb_image(2, x, y) = b;
         }
     }
     // std::cout << "hmm " << rgb_image(0, 0, 0) << std::endl;
@@ -257,7 +256,7 @@ ImageDataset::ImageDataset(const std::string &imagesDirectoryPath, const std::op
 
     labels.resize(imgs_count, 1);
     if (labelsCsvPath.has_value()) {
-        std::cout << "reading labels from " << labelsCsvPath.value() << std::endl;
+        // std::cout << "reading labels from " << labelsCsvPath.value() << std::endl;
         std::ifstream labelsCsv;
         labelsCsv.open(labelsCsvPath.value());
 
@@ -269,10 +268,10 @@ ImageDataset::ImageDataset(const std::string &imagesDirectoryPath, const std::op
         if (line_parts[0] == "fname") {
             fname_idx = 0;
         } else if (line_parts[0] == "label") {
-            label_idx = 1;
+            label_idx = 0;
         }
         if (line_parts[1] == "fname") {
-            fname_idx = 0;
+            fname_idx = 1;
         } else if (line_parts[1] == "label") {
             label_idx = 1;
         }
@@ -282,6 +281,9 @@ ImageDataset::ImageDataset(const std::string &imagesDirectoryPath, const std::op
         while (getline(labelsCsv, line)) {
             auto line_parts = Split(line, [sep](char ch) { return ch == sep; });
             assert(line_parts.size() == 2);
+            // std::cout << "Line: " << line << std::endl;
+            // std::cout << "label_idx: " << label_idx << ", fname_idx: " << fname_idx << std::endl;
+            // std::cout << "Setting " << line_parts[label_idx] << " for " << imagesDirectoryPath + "/" + line_parts[fname_idx] << std::endl;
             fpath2label[imagesDirectoryPath + "/" + line_parts[fname_idx]] = std::stoi(line_parts[label_idx]);
         }
         labelsCsv.close();

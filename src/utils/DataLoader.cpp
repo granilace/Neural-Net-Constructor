@@ -39,7 +39,7 @@ ImageDatasetLoader::ImageDatasetLoader(ImageDataset *dataset, int batchSize) : d
 std::pair<Tensor<float, 4>, Tensor<int, 2>> ImageDatasetLoader::nextBatch() {
     Tensor<float, 4> x;
     Tensor<int, 2> y;
-    x.resize(batchSize, dataset->height(), dataset->width(), dataset->nChannels());
+    x.resize(batchSize, dataset->nChannels(), dataset->height(), dataset->width());
     y.resize(batchSize, 1);
 
     int startIdx = nextBatchIdx * batchSize;

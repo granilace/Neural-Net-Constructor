@@ -5,6 +5,8 @@ find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 target_sources(nn_constructor
   PRIVATE
+    layers/Activations.cpp
+    layers/Flatten.cpp
     layers/Identity.cpp
     layers/Linear.cpp
     layers/Sequential.cpp
@@ -14,6 +16,8 @@ target_sources(nn_constructor
     utils/Dataset.cpp
     utils/DataLoader.cpp
   PUBLIC
+    layers/Activations.h
+    layers/Flatten.h
     layers/Identity.h
     layers/Linear.h
     layers/Sequential.h

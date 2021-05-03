@@ -35,9 +35,9 @@ public:
 
     int size() const { return data.dimension(0); }
 
-    int height() const { return data.dimension(1); }
-    int width() const { return data.dimension(2); }
-    int nChannels() const { return data.dimension(3); }
+    int height() const { return data.dimension(2); }
+    int width() const { return data.dimension(3); }
+    int nChannels() const { return data.dimension(1); }
 
     // returns pair of object and its label. If hasLabel() == false then label.size() == 0
     std::pair<Tensor<float, 3>, Tensor<int, 1>> getItem(int index) const;

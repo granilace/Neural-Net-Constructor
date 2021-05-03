@@ -33,6 +33,9 @@ Tensor<T, 4> conv2d(Tensor<T, 4> const& input, Tensor<T, 4> const& weight, Tenso
                         for (size_t d_i = 0; d_i < kernel_height; d_i++) {
                             for (size_t d_j = 0; d_j < kernel_width; d_j++) {
                                 // std::cout << "ADD " << input(b, ch_in, i + d_i, j + d_j) << " " <<  weight(ch_in, ch_out, d_i, d_j) << std::endl;
+                                // std::cout << "(b, i, j, ch_in, ch_out, d_i, d_j) = " << "(" << b << "," << i << "," << j << "," << ch_in << "," << ch_out << "," << d_i << "," << d_j << ")" << std::endl;
+
+
                                 output(b, ch_out, i, j) += input(b, ch_in, i + d_i, j + d_j)  \
                                     * weight(ch_in, ch_out, d_i, d_j);
                             }

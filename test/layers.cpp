@@ -2,6 +2,7 @@
 
 #include "utils/Tensor.h"
 #include "utils/Parameter.h"
+#include "layers/Flatten.h"
 #include "layers/Identity.h"
 #include "layers/Linear.h"
 #include "layers/Conv2d.h"
@@ -146,4 +147,13 @@ TEST(Conv2dMaxPooltest, Conv2dMaxpool2d) {
 
     MaxPool2d<float> mp = MaxPool2d<float>(2, 2);
     output = mp.forward(input);
+}
+
+TEST(Flatten, Flatten) {
+    Tensor<float, 4> input(8, 3, 32, 32);
+    auto flatten = Flatten<float>();
+
+    auto output = flatten.forward(input);
+    ASSERT_TRUE(output.dimension(0) == 8);
+    ASSERT_TRUE(output.dimension(1) == 3 * 32 * 32);
 }

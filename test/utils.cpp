@@ -199,15 +199,15 @@ TEST(ImageDataset, WithLabels) {
     auto first_image = first_item.first;
     auto first_image_dimensions = first_image.dimensions();
     ASSERT_TRUE(first_image_dimensions.size() == 3);
-    ASSERT_TRUE(first_image_dimensions[0] == 32);
+    ASSERT_TRUE(first_image_dimensions[0] == 3);
     ASSERT_TRUE(first_image_dimensions[1] == 32);
-    ASSERT_TRUE(first_image_dimensions[2] == 3);
+    ASSERT_TRUE(first_image_dimensions[2] == 32);
     ASSERT_NEAR(first_image(0, 0, 0), 59.0, 1e-7);
-    ASSERT_NEAR(first_image(0, 0, 1), 62.0, 1e-7);
-    ASSERT_NEAR(first_image(0, 0, 2), 63.0, 1e-7);
-    ASSERT_NEAR(first_image(11, 12, 0), 213.0, 1e-7);
-    ASSERT_NEAR(first_image(11, 12, 1), 150.0, 1e-7);
-    ASSERT_NEAR(first_image(11, 12, 2), 59.0, 1e-7);
+    ASSERT_NEAR(first_image(1, 0, 0), 62.0, 1e-7);
+    ASSERT_NEAR(first_image(2, 0, 0), 63.0, 1e-7);
+    ASSERT_NEAR(first_image(0, 11, 12), 213.0, 1e-7);
+    ASSERT_NEAR(first_image(1, 11, 12), 150.0, 1e-7);
+    ASSERT_NEAR(first_image(2, 11, 12), 59.0, 1e-7);
     auto first_label = first_item.second;
     auto first_label_dimensions = first_label.dimensions();
     ASSERT_TRUE(first_label_dimensions.size() == 1);
@@ -217,9 +217,9 @@ TEST(ImageDataset, WithLabels) {
     auto fourth_item = imageDataset.getItem(3);
     auto fourth_image = fourth_item.first;
     auto fourth_image_dimensions = fourth_image.dimensions();
-    ASSERT_NEAR(fourth_image(19, 7, 0), 111.0, 1e-7);
-    ASSERT_NEAR(fourth_image(19, 7, 1), 96.0, 1e-7);
-    ASSERT_NEAR(fourth_image(19, 7, 2), 72.0, 1e-7);
+    ASSERT_NEAR(fourth_image(0, 19, 7), 111.0, 1e-7);
+    ASSERT_NEAR(fourth_image(1, 19, 7), 96.0, 1e-7);
+    ASSERT_NEAR(fourth_image(2, 19, 7), 72.0, 1e-7);
     auto fourth_label = fourth_item.second;
     auto fourth_label_dimensions = fourth_label.dimensions();
     ASSERT_TRUE(fourth_label_dimensions.size() == 1);
@@ -250,7 +250,6 @@ TEST(ImageDatasetLoader, WithLabels) {
     batch = imageDatasetLoader.nextBatch();
     batch_images = batch.first;
     batch_labels = batch.second;
-    std::cout << "WTF " << batch_images.dimension(0) << std::endl;
     ASSERT_TRUE(batch_images.dimension(0) == 4);
     for (size_t image_idx = 4; image_idx < 8; ++image_idx) {
         auto expected_item = imageDataset.getItem(image_idx);
