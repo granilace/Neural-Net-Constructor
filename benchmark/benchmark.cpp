@@ -129,7 +129,7 @@ int main() {
     // std::ofstream o("pretty.json");
     // o << std::setw(4) << j << std::endl;
 
-    save_json(benchmark_forward(benchmark, default_params), "conv2d.forward.json");
+    save_json(benchmark_forward(benchmark, default_params), "conv2d_convolve.forward.json");
     save_json(benchmark_backward(benchmark, default_params), "conv2d.backward.json");
 
     // std::cout << forward() << std::endl;

@@ -18,32 +18,29 @@ Tensor<T, 4> conv2d(Tensor<T, 4> const& input, Tensor<T, 4> const& weight, Tenso
     assert(h >= kernel_height - 1);
     assert(w >= kernel_width - 1);
     size_t h_new = h - kernel_height + 1;
-    size_t w_new = h - kernel_width + 1;
+    size_t w_new = w - kernel_width + 1;
 
     Tensor<T, 4> output(bs, out_channels, h_new, w_new);
     output.setZero();
 
+    Eigen::array<ptrdiff_t, 3> dims({0, 1, 2});
+
     // std::cout << "input: " << input << std::endl;
     // std::cout << "weight: " << weight << std::endl;
+    array<int, 3> three_dims{{out_channels, 1, 1}};
+    array<int, 3> three_dims_broadcast{{1, h_new, w_new}};
+    auto bias_broadcast = bias.reshape(three_dims).broadcast(three_dims_broadcast);
+    //std::cout << "bias_broadcast: " << bias_broadcast.NumDimensions << std::endl;
     for (size_t b = 0; b < bs; b++) {
-        for (size_t i = 0; i < h_new; i++) {
-            for (size_t j = 0; j < w_new; j++) {
-                for (size_t ch_in = 0; ch_in < in_channels; ch_in++) {
-                    for (size_t ch_out = 0; ch_out < out_channels; ch_out++) {
-                        for (size_t d_i = 0; d_i < kernel_height; d_i++) {
-                            for (size_t d_j = 0; d_j < kernel_width; d_j++) {
-                                // std::cout << "ADD " << input(b, ch_in, i + d_i, j + d_j) << " " <<  weight(ch_in, ch_out, d_i, d_j) << std::endl;
-                                // std::cout << "(b, i, j, ch_in, ch_out, d_i, d_j) = " << "(" << b << "," << i << "," << j << "," << ch_in << "," << ch_out << "," << d_i << "," << d_j << ")" << std::endl;
-
-
-                                output(b, ch_out, i, j) += input(b, ch_in, i + d_i, j + d_j)  \
-                                    * weight(ch_in, ch_out, d_i, d_j);
-                            }
-                        }
-                        output(b, ch_out, i, j) += bias(ch_out);
-                    }
-                }
-            }
+        for (size_t ch_out = 0; ch_out < out_channels; ch_out++) {
+            //Tensor<float, 2> a = output.chip(b, 0).chip(ch_out, 0);
+            //Tensor<float, 2> bb = input.chip(b, 0).convolve(weight.chip(ch_out, 1), dims).chip(0, 0);
+            // std::cout << "output: " << a.dimension(0) << " " << a.dimension(1) << std::endl;
+            // std::cout << " input.chip(b, 0).convolve(weight.chip(ch_out, 1), dims)" << b.dimension(0) << " "  << b.dimension(1) << std::endl;
+            //Tensor<float, 3> x = input.chip(b, 0).convolve(weight.chip(ch_out, 1), dims);//.chip(0, 0);
+            //std::cout << "aaaaaaa " << x.dimension(0) << ' ' << x.dimension(1) << ' ' << x.dimension(2) << std::endl;
+            //std::cout << "bbbbbbb " << output.dimension(2) << ' ' << output.dimension(3) << std::endl;
+            output.chip(b, 0).chip(ch_out, 0) = input.chip(b, 0).convolve(weight.chip(ch_out, 1), dims).chip(0, 0) + bias_broadcast.chip(ch_out, 0);
         }
     }
     return output;

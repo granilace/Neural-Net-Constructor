@@ -187,3 +187,24 @@ TEST(Conv2dTest, TestMaxpool2d) {
     assert_equal<float, 4>(exp_output, output);
     assert_equal<float, 4>(exp_grad_input, grad_input);
 }
+
+TEST(Conv2dtmp, cn) {
+    size_t in_channels = 1;
+    size_t out_channels = 1;
+    size_t input_channels = 2;
+    size_t kernel_height = 2;
+    size_t kernel_channels = input_channels;
+    size_t kernel_width = 2, kernel_count = 4;
+    size_t H = 3;
+    size_t W = 3;
+
+    Eigen::Tensor<float, 3> input(input_channels, W, H);
+    Eigen::Tensor<float, 4> filters(kernel_channels, kernel_width, kernel_height, kernel_count);
+    Eigen::Tensor<float, 3> output(kernel_count, 2, 2);
+
+    Eigen::array<ptrdiff_t, 3> dims({0, 1, 2});
+
+    for (int i = 0; i < kernel_count; ++i){
+        output.chip(i, 0) = input.convolve(filters.chip(i, 3), dims).chip(0, 0);
+    }
+}
