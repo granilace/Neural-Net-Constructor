@@ -122,7 +122,7 @@ Tensor<T, 4> grad_input(Tensor<T, 4> const& weight, Tensor<T, 4> const& grad_out
     size_t kernel_width =  weight.dimension(3);
 
     size_t bs =          grad_out.dimension(0);
-    assert(out_channels == grad_out.dimension(1));
+    assert(int(out_channels) == grad_out.dimension(1));
     size_t h_new =           grad_out.dimension(2);
     size_t w_new =           grad_out.dimension(3);
 
