@@ -18,7 +18,7 @@ Tensor<T, 4> conv2d(Tensor<T, 4> const& input, Tensor<T, 4> const& weight, Tenso
     assert(h >= kernel_height - 1);
     assert(w >= kernel_width - 1);
     size_t h_new = h - kernel_height + 1;
-    size_t w_new = h - kernel_width + 1;
+    size_t w_new = w - kernel_width + 1;
 
     Tensor<T, 4> output(bs, out_channels, h_new, w_new);
     output.setZero();
