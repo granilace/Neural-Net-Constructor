@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "layers/Dropout.h"
-#include "test_utils.cpp"
+#include "test_utils.h"
 
 
 TEST(Dropout, DropoutTestTrain) {

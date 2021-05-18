@@ -1,9 +1,7 @@
 //
 // Created by Sergei Troshin on 18.03.2021.
 //
-
-#ifndef NEURAL_NET_CONSTRUCTOR1_OPTIMIZER_H
-#define NEURAL_NET_CONSTRUCTOR1_OPTIMIZER_H
+#pragma once
 
 #include <vector>
 #include "../utils/Parameter.cpp"
@@ -21,6 +19,3 @@ public:
         p.tensor -= learning_rate * p.gradient;
     };
 };
-
-
-#endif //NEURAL_NET_CONSTRUCTOR1_OPTIMIZER_H

@@ -1,5 +1,4 @@
-#ifndef NEURAL_NET_CONSTRUCTOR1_IDENTITY_H
-#define NEURAL_NET_CONSTRUCTOR1_IDENTITY_H
+#pragma once
 
 #include "Layer.h"
 #include <fstream>
@@ -50,5 +49,3 @@ class Dropout : public Layer<T, T, NumDims, NumDims> {
     float p = 0.5;
     Tensor<T, NumDims> mask;
 };
-
-#endif // NEURAL_NET_CONSTRUCTOR1_IDENTITY_H

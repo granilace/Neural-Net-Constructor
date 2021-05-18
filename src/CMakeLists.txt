@@ -15,6 +15,7 @@ target_sources(nn_constructor
     utils/Tensor.cpp
     utils/Dataset.cpp
     utils/DataLoader.cpp
+    utils/Parallel.cpp
   PUBLIC
     layers/Activations.h
     layers/Flatten.h
@@ -28,6 +29,7 @@ target_sources(nn_constructor
     utils/Tensor.h
     utils/Dataset.h
     utils/DataLoader.h
+    utils/Parallel.cpp
 )
 
 target_link_libraries(nn_constructor Eigen3::Eigen ${PNG_LIBRARY})

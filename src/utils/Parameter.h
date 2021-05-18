@@ -1,9 +1,7 @@
 //
 // Created by Sergei Troshin on 18.03.2021.
 //
-
-#ifndef NEURAL_NET_CONSTRUCTOR1_PARAMETER_H
-#define NEURAL_NET_CONSTRUCTOR1_PARAMETER_H
+#pragma once
 
 #include "Tensor.h"
 
@@ -52,5 +50,3 @@ template <typename T> class ParameterMatrix : public Parameter<T, 2> {
         load_weights(gradient, file);
     }
 };
-
-#endif // NEURAL_NET_CONSTRUCTOR1_PARAMETER_H

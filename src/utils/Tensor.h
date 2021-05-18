@@ -1,9 +1,7 @@
 //
 // Created by Sergei Troshin on 18.03.2021.
 //
-
-#ifndef NEURAL_NET_CONSTRUCTOR1_TENSOR_H
-#define NEURAL_NET_CONSTRUCTOR1_TENSOR_H
+#pragma once
 
 #define SEED 1
 
@@ -166,5 +164,3 @@ tensor_fill_bernoulli(Tensor<T, Dims> t, float p) {
         return static_cast<T>(distribution(gen));
     });
 }
-
-#endif // NEURAL_NET_CONSTRUCTOR1_TENSOR_H

@@ -1,9 +1,7 @@
 //
 // Created by Sergei Troshin on 18.03.2021.
 //
-
-#ifndef NEURAL_NET_CONSTRUCTOR1_IDENTITY_H
-#define NEURAL_NET_CONSTRUCTOR1_IDENTITY_H
+#pragma once
 
 #include "Layer.h"
 #include <fstream>
@@ -37,5 +35,3 @@ class Identity : public Layer<T, T, InNumDims, OutNumDims> {
 
     void init_weights() {}
 };
-
-#endif // NEURAL_NET_CONSTRUCTOR1_IDENTITY_H

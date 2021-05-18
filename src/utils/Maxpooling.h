@@ -1,5 +1,6 @@
 #pragma once
 #include "Tensor.h"
+#include "Parallel.h"
 
 template <typename T>
 std::pair<Tensor<T, 4>, Tensor<size_t, 5>> maxpool2d(Tensor<T, 4> const& input, size_t kernel_height, size_t kernel_width) {
@@ -15,31 +16,33 @@ std::pair<Tensor<T, 4>, Tensor<size_t, 5>> maxpool2d(Tensor<T, 4> const& input, 
     Tensor<size_t, 5> max_indices(bs, in_channels, h_new, w_new, 2);
     output.setZero();
 
-    for (size_t b = 0; b < bs; b++) {
-        for (size_t ch_in = 0; ch_in < in_channels; ch_in++) {
-            for (size_t i = 0, ii = 0; i < h; i += kernel_height, ii += 1) {
-                for (size_t j = 0, jj = 0; j < w; j += kernel_width, jj += 1) {
-                    T maximum = input(b, ch_in, i, j);
-                    size_t mx_i = i;
-                    size_t mx_j = j;
-                    for (size_t d_i = 0; d_i < kernel_height; d_i += 1) {
-                        if (i + d_i >= h) break;
-                        for (size_t d_j = 0; d_j < kernel_width; d_j += 1) {
-                            if (j + d_j >= w) break;
-                                if (maximum < input(b, ch_in, i + d_i, j + d_j)) {
-                                    maximum = input(b, ch_in, i + d_i, j + d_j);
-                                    mx_i = i + d_i;
-                                    mx_j = j + d_j;
-                                }
+    parallelize(bs, [&](int tid, int n_threads) { 
+        for (size_t b = tid; b < bs; b += n_threads) {
+            for (size_t ch_in = 0; ch_in < in_channels; ch_in++) {
+                for (size_t i = 0, ii = 0; i < h; i += kernel_height, ii += 1) {
+                    for (size_t j = 0, jj = 0; j < w; j += kernel_width, jj += 1) {
+                        T maximum = input(b, ch_in, i, j);
+                        size_t mx_i = i;
+                        size_t mx_j = j;
+                        for (size_t d_i = 0; d_i < kernel_height; d_i += 1) {
+                            if (i + d_i >= h) break;
+                            for (size_t d_j = 0; d_j < kernel_width; d_j += 1) {
+                                if (j + d_j >= w) break;
+                                    if (maximum < input(b, ch_in, i + d_i, j + d_j)) {
+                                        maximum = input(b, ch_in, i + d_i, j + d_j);
+                                        mx_i = i + d_i;
+                                        mx_j = j + d_j;
+                                    }
+                            }
                         }
+                        output(b, ch_in, ii, jj) = maximum;
+                        max_indices(b, ch_in, ii, jj, 0) = mx_i;
+                        max_indices(b, ch_in, ii, jj, 1) = mx_j;
                     }
-                    output(b, ch_in, ii, jj) = maximum;
-                    max_indices(b, ch_in, ii, jj, 0) = mx_i;
-                    max_indices(b, ch_in, ii, jj, 1) = mx_j;
                 }
             }
         }
-    }
+    });
     return {output, max_indices};
 }
 
@@ -62,17 +65,19 @@ Tensor<T, 4> grad_maxpool(Tensor<T, 4> const& input, Tensor<T, 4> const& grad_ou
     Tensor<T, 4> grad_input(bs, in_channels, h, w);
     grad_input.setZero();
 
-    for (size_t b = 0; b < bs; b++) {
-        for (size_t ch_in = 0; ch_in < in_channels; ch_in++) {
-            for (size_t i = 0; i < h_new; i += 1) {
-                for (size_t j = 0; j < w_new; j += 1) {
-                    size_t i_ind = indices(b, ch_in, i, j, 0);
-                    size_t j_ind = indices(b, ch_in, i, j, 1);
-                    grad_input(b, ch_in, i_ind, j_ind) = grad_out(b, ch_in, i, j);
+    parallelize(bs, [&](int tid, int n_threads) { 
+        for (size_t b = tid; b < bs; b += n_threads) {
+            for (size_t ch_in = 0; ch_in < in_channels; ch_in++) {
+                for (size_t i = 0; i < h_new; i += 1) {
+                    for (size_t j = 0; j < w_new; j += 1) {
+                        size_t i_ind = indices(b, ch_in, i, j, 0);
+                        size_t j_ind = indices(b, ch_in, i, j, 1);
+                        grad_input(b, ch_in, i_ind, j_ind) = grad_out(b, ch_in, i, j);
+                    }
                 }
             }
         }
-    }
+    });
     return grad_input;
 }
 

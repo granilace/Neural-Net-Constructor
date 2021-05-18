@@ -1,9 +1,7 @@
 //
 // Created by Sergei Troshin on 18.03.2021.
 //
-
-#ifndef NEURAL_NET_CONSTRUCTOR1_SEQUENTIAL_H
-#define NEURAL_NET_CONSTRUCTOR1_SEQUENTIAL_H
+#pragma once
 
 #include "Identity.h"
 #include "Layer.h"
@@ -120,5 +118,3 @@ class Sequential
   private:
     std::tuple<Layers...> layers;
 };
-
-#endif // NEURAL_NET_CONSTRUCTOR1_SEQUENTIAL_H
