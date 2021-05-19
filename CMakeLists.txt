@@ -18,6 +18,6 @@ target_link_directories(cifar PRIVATE src)
 target_link_libraries(cifar Eigen3::Eigen)
 target_link_libraries(cifar nn_constructor)
 target_link_libraries( cifar ${CMAKE_THREAD_LIBS_INIT} )
-file(COPY data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY scripts/data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 target_compile_definitions(unit_tests PUBLIC TEST_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/test/")
