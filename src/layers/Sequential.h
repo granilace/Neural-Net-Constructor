@@ -60,9 +60,9 @@ class Sequential
 
     Tensor<out_element_type, OutNumDims>
     forward(Tensor<in_element_type, InNumDims> const& X) override {
-        std::cout << "Inside Sequential::forward" << std::endl;
+        // std::cout << "Inside Sequential::forward" << std::endl;
         any t = X;
-        std::cout << "After any t = X" << std::endl;
+        // std::cout << "After any t = X" << std::endl;
         for_each(layers, [&t](auto& layer) {
             t = layer.forward(
                 any_cast<Tensor<typename std::remove_reference<decltype(

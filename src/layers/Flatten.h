@@ -11,16 +11,16 @@ class Flatten : public Layer<T, T, 4, 2> {
     Flatten() {}
 
     Tensor<T, 2> forward(Tensor<T, 4> const& X) override {
-        std::cout << "Flatten::forward" << std::endl;
+        // std::cout << "Flatten::forward" << std::endl;
         X_ = X;
-        std::cout << "After X_=X" << std::endl;
+        // std::cout << "After X_=X" << std::endl;
         std::array<int, 2> out_dimensions;
         out_dimensions[0] = X.dimension(0);
         out_dimensions[1] = 1;
         for (size_t dim = 1; dim < 4; ++dim) {
             out_dimensions[1] *= X.dimension(dim);
         }
-        std::cout << "out_dimensions[1]=" << out_dimensions[1] << std::endl;
+        // std::cout << "out_dimensions[1]=" << out_dimensions[1] << std::endl;
         return X.reshape(out_dimensions);
     };
 

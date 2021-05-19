@@ -44,7 +44,7 @@ std::pair<Tensor<float, 4>, Tensor<int, 2>> ImageDatasetLoader::nextBatch() {
 
     int startIdx = nextBatchIdx * batchSize;
     int endIdx = (nextBatchIdx + 1) * batchSize;
-    std::cout << "startIdx=" << startIdx << ", endIdx=" << endIdx << std::endl;
+    // std::cout << "startIdx=" << startIdx << ", endIdx=" << endIdx << std::endl;
     assert(endIdx <= dataset->size());
 
     for (int i = startIdx; i != endIdx; ++i) {

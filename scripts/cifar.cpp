@@ -71,10 +71,10 @@ int main(int argc, char** argv) {
     while (epoch < run_options.epochs) {
         auto batch = train_dataset_loader.nextBatch();
         Tensor<float, 4> batch_imgs = batch.first;
-        std::cout << "batch imgs prepared " << batch_imgs.dimension(0) << ", " << batch_imgs.dimension(1) << ", " << batch_imgs.dimension(2) << ", " << batch_imgs.dimension(3) << std::endl;
+        // std::cout << "batch imgs prepared " << batch_imgs.dimension(0) << ", " << batch_imgs.dimension(1) << ", " << batch_imgs.dimension(2) << ", " << batch_imgs.dimension(3) << std::endl;
         Tensor<float, 2> forward_result = model.forward(batch_imgs);
-        std::cout << "after model.forward(batch_imgs)" << std::endl;
-        std::cout << "forward_result: " << forward_result.dimension(0) << ", " << forward_result.dimension(1) << std::endl;
+        // ::cout << "after model.forward(batch_imgs)" << std::endl;
+        // std::cout << "forward_result: " << forward_result.dimension(0) << ", " << forward_result.dimension(1) << std::endl;
         // model.backward(grad);
         // model.update(opt);
         if (train_dataset_loader.nextBatchIndex() == 0) {
